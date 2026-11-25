@@ -136,7 +136,7 @@ history keeps every version that reached `main`.
 |---|---|---|
 | `title` | `Journeys` | The board's title |
 | `baseBranch` | `main` | What pull requests are compared against, and where the baseline comes from |
-| `platforms` | `[{"id":"web","label":"Web"}]` | Boards to keep apart (for example `web`, `desktop`, `ios`), in display order. Add `"repo"` when another repo captures that platform. |
+| `platforms` | `[{"id":"web","label":"Web"}]` | Boards to keep apart (for example `web`, `desktop`, `ios`), in display order. Add `"repo"` when another repo captures that platform. Phone ids (`mobile`, `phone`, `ios`, `android`, `iphone`) get tall cards on the board, the rest wide ones; set `"shape": "portrait"` or `"landscape"` to choose. |
 | `dataBranch` | `journeyboard-data` | The branch the pictures live on |
 | `dataRepo` | this repo | Keep the pictures in another repository (see below) |
 | `siteUrl` | the repo's GitHub Pages address | Where the board lives, for links in comments |

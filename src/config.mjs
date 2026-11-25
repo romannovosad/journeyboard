@@ -38,6 +38,10 @@ export function loadConfig(file = CONFIG_FILE) {
   return normalizeConfig(raw);
 }
 
+/** The board's card shape per platform: phone screenshots are tall, the rest wide. A platform's `shape` overrides it. */
+const SHAPES = ['landscape', 'portrait'];
+const PORTRAIT_IDS = new Set(['mobile', 'phone', 'ios', 'android', 'iphone']);
+
 export function normalizeConfig(raw = {}) {
   const config = { ...DEFAULTS, ...raw };
   const platforms = Array.isArray(config.platforms) && config.platforms.length ? config.platforms : DEFAULTS.platforms;
@@ -47,7 +51,11 @@ export function normalizeConfig(raw = {}) {
 
     assertName('platform', entry.id);
 
-    return { label: pretty(entry.id), ...entry };
+    if (entry.shape !== undefined && !SHAPES.includes(entry.shape)) {
+      throw new Error(`${CONFIG_FILE}: platform "${entry.id}" has shape "${entry.shape}"; use ${SHAPES.join(' or ')}`);
+    }
+
+    return { label: pretty(entry.id), shape: PORTRAIT_IDS.has(entry.id) ? 'portrait' : 'landscape', ...entry };
   });
 
   for (const key of ['title', 'baseBranch', 'owner', 'dataRepo', 'dataBranch', 'siteUrl']) {

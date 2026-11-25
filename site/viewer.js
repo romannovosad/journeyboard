@@ -96,11 +96,11 @@
 
   // ---------- the board ----------
 
-  // Card sizes per platform, in board pixels at 100%. Web and desktop shots are landscape, mobile ones portrait.
+  // Card sizes per shape, in board pixels at 100%. The config gives each platform its shape: phones portrait, the
+  // rest landscape. A platform with pictures but missing from the config gets a landscape board.
   const SIZES = {
-    web: { w: 260, thumb: 163 },
-    desktop: { w: 260, thumb: 163 },
-    mobile: { w: 150, thumb: 300 },
+    landscape: { w: 260, thumb: 163 },
+    portrait: { w: 150, thumb: 300 },
   };
   const BODY_H = 50;
   const GAP_X = 110;
@@ -131,7 +131,7 @@
 
   /** Pixel geometry for a board: where each lane and grid cell sits. */
   function geometry(data, platform) {
-    const size = SIZES[platform] || SIZES.web;
+    const size = SIZES[platformInfo(platform).shape] || SIZES.landscape;
     const cardH = size.thumb + BODY_H;
     const laneTop = new Map();
     let y = PAD;
@@ -340,9 +340,9 @@
   /** Loads the pictures of cards on screen, once they are big enough to see. Off-screen ones wait. */
   function loadVisible() {
     const b = board;
-    // Full screenshots are big: below ~110 px on screen a card shows its title only, so fitting a board of a few
-    // hundred screens doesn't decode them all.
-    if (!b || !b.el.isConnected || b.g.size.w * b.k < 110) return;
+    // Full screenshots are big: when a card's longer side is under 100 px on screen it shows its title only, so
+    // fitting a board of a few hundred screens doesn't decode them all. A board of a few dozen fits above it.
+    if (!b || !b.el.isConnected || Math.max(b.g.size.w, b.g.size.thumb) * b.k < 100) return;
     const view = b.el.getBoundingClientRect();
     const margin = 300;
     for (const img of b.layer.querySelectorAll('img[data-src]')) {

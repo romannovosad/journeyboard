@@ -13,11 +13,24 @@ import { tempDir } from './helpers.mjs';
 test('config: defaults, string platforms, order, and bad values', () => {
   const c = normalizeConfig({ platforms: ['web', { id: 'ios', label: 'iPhone' }] });
 
-  assert.deepEqual(c.platforms, [{ id: 'web', label: 'Web' }, { id: 'ios', label: 'iPhone' }]);
+  assert.deepEqual(c.platforms, [
+    { id: 'web', label: 'Web', shape: 'landscape' },
+    { id: 'ios', label: 'iPhone', shape: 'portrait' },
+  ]);
   assert.equal(c.dataBranch, 'journeyboard-data');
   assert.deepEqual(platformOrder(c, ['android', 'ios', 'web']), ['web', 'ios', 'android']);
   assert.throws(() => normalizeConfig({ platforms: ['Web App'] }), /platform/);
   assert.throws(() => normalizeConfig({ dataRepo: 'nope' }), /owner\/repo/);
+});
+
+test('config: phone-like platforms get portrait cards on the board, and shape can be set', () => {
+  const shapes = (platforms) => normalizeConfig({ platforms }).platforms.map((p) => p.shape);
+
+  assert.deepEqual(shapes(['web', 'desktop', 'tablet', 'mobile', 'phone', 'ios', 'android', 'iphone']), [
+    'landscape', 'landscape', 'landscape', 'portrait', 'portrait', 'portrait', 'portrait', 'portrait',
+  ]);
+  assert.deepEqual(shapes([{ id: 'kiosk', shape: 'portrait' }, { id: 'phone', shape: 'landscape' }]), ['portrait', 'landscape']);
+  assert.throws(() => normalizeConfig({ platforms: [{ id: 'web', shape: 'square' }] }), /shape/);
 });
 
 test('reporter: names from the file and the titles', () => {

@@ -14,10 +14,12 @@
  *   branches/<repo>/<slug>/branch.json, branches/<repo>/<slug>/<platform>/<flow>/<step>.jpg
  *   design/<repo>/<slug>/design.json and the mockup files
  */
-import { copyFileSync, existsSync, mkdirSync, renameSync, rmSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { DEFAULTS } from './config.mjs';
+import { sameScreen } from './image.mjs';
 import {
   assertName,
   assertPlatform,
@@ -49,10 +51,12 @@ export function readBaseline(data, platform) {
 }
 
 /**
- * Compares a run's screens with the baseline by hash.
+ * Compares a run's screens with the baseline: equal hashes are unchanged; otherwise, when `baselineDir` holds the
+ * baseline's pictures, a screen that only differs by noise (see `tolerance`, the config's `changes`) is unchanged
+ * too, and keeps the baseline's hash and image type, since the baseline's picture is the one that stays.
  * Returns { screens: [...with status new|changed|unchanged], removed: [...] }.
  */
-export function classify(shots, baselineScreens) {
+export function classify(shots, baselineScreens, { baselineDir = null, tolerance = DEFAULTS.changes } = {}) {
   const base = new Map(baselineScreens.map((s) => [screenKey(s), s]));
   const seen = new Set();
   const screens = shots.map((shot) => {
@@ -63,7 +67,15 @@ export function classify(shots, baselineScreens) {
     let status = 'new';
 
     if (before) {
-      status = before.hash === shot.hash ? 'unchanged' : 'changed';
+      if (before.hash === shot.hash) {
+        status = 'unchanged';
+      } else if (looksTheSame(shot, before, baselineDir, tolerance)) {
+        const { ext: _ext, ...rest } = shot;
+
+        return { ...rest, ...(before.ext ? { ext: before.ext } : {}), hash: before.hash, status: 'unchanged' };
+      } else {
+        status = 'changed';
+      }
     }
 
     return { ...shot, status };
@@ -75,14 +87,22 @@ export function classify(shots, baselineScreens) {
   return { screens, removed };
 }
 
+function looksTheSame(shot, before, baselineDir, tolerance) {
+  const baseline = baselineDir && path.join(baselineDir, before.flow, imageFile(before));
+
+  if (!baseline || !existsSync(baseline)) return false;
+
+  return sameScreen(readFileSync(baseline), readFileSync(shot.source), tolerance);
+}
+
 /** A PR run: replaces the branch's folder for this platform with its new and changed screens. */
-export function publishBranch({ data, shots, repo, platform, branch, pr = null, commit, date = nowIso() }) {
+export function publishBranch({ data, shots, repo, platform, branch, pr = null, commit, date = nowIso(), tolerance = DEFAULTS.changes }) {
   assertRepo(repo);
   assertPlatform(platform);
   const slug = branchSlug(branch);
   const run = readShots(shots);
   const baseline = readBaseline(data, platform);
-  const { screens, removed } = classify(run, baseline.screens);
+  const { screens, removed } = classify(run, baseline.screens, { baselineDir: baselineDir(data, platform), tolerance });
   const branchDir = path.join(data, 'branches', repo, slug);
   const platformDir = path.join(branchDir, platform);
 
@@ -138,13 +158,23 @@ export function summarize(platformRecord) {
  * removed screen replaces moves to history, with when it was current and the
  * PR that replaced it.
  */
-export function publishBaseline({ data, shots, platform, commit, subject = '', prs = null, date = nowIso(), allowMassRemoval = false }) {
+export function publishBaseline({
+  data,
+  shots,
+  platform,
+  commit,
+  subject = '',
+  prs = null,
+  date = nowIso(),
+  allowMassRemoval = false,
+  tolerance = DEFAULTS.changes,
+}) {
   assertPlatform(platform);
   const run = readShots(shots);
   const pr = prsFor({ prs, subject });
   const baseline = readBaseline(data, platform);
-  const { screens, removed } = classify(run, baseline.screens);
   const dir = baselineDir(data, platform);
+  const { screens, removed } = classify(run, baseline.screens, { baselineDir: dir, tolerance });
   const previous = new Map(baseline.screens.map((s) => [screenKey(s), s]));
 
   if (

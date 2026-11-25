@@ -143,7 +143,16 @@ export async function ciPr(s = settings()) {
     env,
     message: `branch: ${s.repo} ${branch} (#${pr.number}) ${s.platform}`,
     apply: (data) =>
-      publishBranch({ data, shots: s.shots, repo: s.repo, platform: s.platform, branch, pr: pr.number, commit: pr.head.sha }),
+      publishBranch({
+        data,
+        shots: s.shots,
+        repo: s.repo,
+        platform: s.platform,
+        branch,
+        pr: pr.number,
+        commit: pr.head.sha,
+        tolerance: s.config.changes,
+      }),
   });
 
   log(`Published ${s.platform}: ${JSON.stringify(out.result)}`);
@@ -216,6 +225,7 @@ export async function ciBaseline(s = settings()) {
         subject,
         prs,
         allowMassRemoval: s.allowMassRemoval,
+        tolerance: s.config.changes,
       }),
   });
 

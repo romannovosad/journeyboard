@@ -3,12 +3,12 @@
   "branch": "feature/design-rebuild",
   "slug": "feature~design-rebuild",
   "pr": 7,
-  "commit": "0ad7e97f1613dfa635ac7bb2f562da19f94ccc6d",
-  "publishedAt": "2026-11-25T10:25:00Z",
+  "commit": "9668fb6a013ea83eb8fc53c4ac174042a1e5deaf",
+  "publishedAt": "2026-11-25T10:27:09Z",
   "platforms": {
     "web": {
-      "commit": "0ad7e97f1613dfa635ac7bb2f562da19f94ccc6d",
-      "publishedAt": "2026-11-25T10:25:00Z",
+      "commit": "9668fb6a013ea83eb8fc53c4ac174042a1e5deaf",
+      "publishedAt": "2026-11-25T10:27:09Z",
       "baselineCommit": "927af44a18fd8853e28cc8a85dff0055b188d6b9",
       "screens": [
         {
@@ -80,8 +80,8 @@
           "test": "tests/journeys.spec.mjs",
           "testTitle": "a new customer signs up",
           "order": 2,
-          "hash": "db590c2b0929d036d98687256305f31a56ad5d0aa5e9d0b0ac9cd790fd67eea0",
-          "status": "unchanged"
+          "hash": "2501314b59dddffbdb1fcd96542a537e9747fbd7fc6c279cd8297ad3b65c25ea",
+          "status": "changed"
         },
         {
           "flow": "signup",

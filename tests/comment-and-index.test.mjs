@@ -159,3 +159,18 @@ test('buildSite copies the viewer and data and writes index.json', () => {
   assert.ok(existsSync(path.join(out, 'data/baseline/web/onboarding/welcome.jpg')));
   assert.equal(JSON.parse(readFileSync(path.join(out, 'index.json'), 'utf8')).branches.length, 1);
 });
+
+test('the comment lists screens in the order the board shows them, not alphabetically', () => {
+  const data = tempDir('data-');
+  const walk = [
+    { flow: 'signup', step: 'landing', body: 'l', testTitle: 'signup' },
+    { flow: 'signup', step: 'account', body: 'a', testTitle: 'signup' },
+    { flow: 'invoicing', step: 'new', body: 'n', testTitle: 'invoicing', from: 'signup/account' },
+  ];
+
+  publishBranch({ data, shots: makeShots(walk), repo: 'app', platform: 'web', branch: 'b', pr: 1, commit: 'c', date: T0 });
+  const md = renderComment({ data, repo: 'app', branch: 'b', dataCommit: 'd', dataRepo: 'acme/app', config });
+  const rows = [...md.matchAll(/^\| `([a-z/-]+)`/gm)].map((m) => m[1]);
+
+  assert.deepEqual(rows, ['signup/landing', 'signup/account', 'invoicing/new']);
+});

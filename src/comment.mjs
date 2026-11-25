@@ -113,8 +113,11 @@ export function renderComment({
   }
 
   for (const [platform, p] of platforms) {
-    const changed = p.screens.filter((s) => s.status === 'changed');
-    const added = p.screens.filter((s) => s.status === 'new');
+    // Rows in the order the board shows them: top lane first, each lane left to right.
+    const place = new Map(buildBoard({ screens: p.screens }).cards.map((c, i) => [screenKey(c), i]));
+    const inBoardOrder = (a, b) => (place.get(screenKey(a)) ?? Infinity) - (place.get(screenKey(b)) ?? Infinity);
+    const changed = p.screens.filter((s) => s.status === 'changed').sort(inBoardOrder);
+    const added = p.screens.filter((s) => s.status === 'new').sort(inBoardOrder);
     const name = platformLabel(config, platform);
 
     if (changed.length === 0 && added.length === 0 && p.removed.length === 0) {

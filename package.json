@@ -1,6 +1,6 @@
 {
   "name": "journeyboard",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Every screen of your app, by user flow, versioned. Playwright screenshots on a board, before/after in every PR.",
   "type": "module",
   "license": "MIT",

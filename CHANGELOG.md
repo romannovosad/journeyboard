@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.2 (2026-11-25)
+
+- The board gives phone platforms (`mobile`, `phone`, `ios`, `android`, `iphone`) tall cards, so a phone screen
+  shows whole instead of cropped to its top. Before, only a platform called `mobile` got them. A platform's
+  `"shape"` in the config overrides this.
+- Fitting the board shows the pictures when a card's longer side is at least 100 px on screen. Before, it was
+  the card's width against 110 px, which hid every picture on a fitted board of twenty-odd desktop screens.
+
 ## 0.1.1 (2026-11-25)
 
 - `journeyboard design` asks the data repository to rebuild its board after pushing (through the GitHub CLI when

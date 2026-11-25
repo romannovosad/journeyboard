@@ -1,0 +1,26 @@
+{
+  "name": "journeyboard",
+  "version": "0.1.0",
+  "description": "Every screen of your app, by user flow, versioned. Playwright screenshots on a board, before/after in every PR.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Roman Novosad",
+  "repository": { "type": "git", "url": "git+https://github.com/romannovosad/journeyboard.git" },
+  "homepage": "https://github.com/romannovosad/journeyboard#readme",
+  "bugs": "https://github.com/romannovosad/journeyboard/issues",
+  "keywords": ["playwright", "screenshots", "user-journey", "user-flow", "visual", "github-action", "design-review"],
+  "bin": { "journeyboard": "bin/journeyboard.mjs" },
+  "exports": {
+    "./playwright": { "types": "./playwright/index.d.ts", "default": "./playwright/index.mjs" },
+    "./reporter": "./reporter/index.mjs",
+    "./config": "./src/config.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": ["bin", "src", "site", "playwright", "reporter", "action.yml", "README.md", "LICENSE"],
+  "engines": { "node": ">=20" },
+  "peerDependencies": { "@playwright/test": ">=1.42" },
+  "peerDependenciesMeta": { "@playwright/test": { "optional": true } },
+  "scripts": {
+    "test": "node --test 'tests/*.test.mjs'"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "journeyboard",
+  "owner": { "name": "Roman Novosad" },
+  "plugins": [
+    {
+      "name": "journeyboard",
+      "source": "./",
+      "description": "Set up journeyboard, add screens to flows, mask personal data and publish design mockups."
+    }
+  ]
+}

@@ -6,6 +6,9 @@ changes, before and after. A board shows the whole product flow by flow, with ea
 
 ![The board: flows as lanes, the screen a pull request changes outlined](docs/board.png)
 
+**[See the live demo board](https://romannovosad.github.io/journeyboard/)**, built by this repository's own CI
+from the small demo app in [`examples/demo`](examples/demo). Open a pull request here and it gets the comment too.
+
 It's for the people who ask "what does sign-up look like right now?" and "what did this PR change for the user?":
 designers, PMs, founders, reviewers. It isn't a visual-regression tool. It never fails a build over a pixel. It
 just keeps the record.
@@ -194,7 +197,7 @@ npx journeyboard design --dir design/
 ```
 
 Make the image with `npx playwright screenshot --viewport-size=1440,900 a/index.html a/list.png`. The command
-pushes with your own git credentials.
+pushes with your own git credentials, then asks the board to rebuild through the GitHub CLI if you're logged in.
 
 ## With an AI coding agent
 

@@ -1,7 +1,7 @@
 {
   "name": "journeyboard",
   "description": "Set up journeyboard (every screen of your app, by user flow, versioned from Playwright tests), add screens to flows, mask personal data and publish design mockups.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": { "name": "Roman Novosad" },
   "homepage": "https://github.com/romannovosad/journeyboard",
   "repository": "https://github.com/romannovosad/journeyboard",

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 (2026-11-25)
+
+- `journeyboard design` asks the data repository to rebuild its board after pushing (through the GitHub CLI when
+  it's logged in), so mockups show up without waiting for the next build.
+- README links the live demo board.
+- `init` writes workflows on the current majors of GitHub's own actions (checkout and setup-node v7, Pages
+  upload and deploy v5), which run on Node 24 instead of the deprecated Node 20.
+
 ## 0.1.0 (2026-11-25)
 
 First public release, extracted from the journey map built for Jurnie.

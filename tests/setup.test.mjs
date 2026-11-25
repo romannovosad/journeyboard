@@ -4,7 +4,7 @@ import path from 'node:path';
 import { test } from 'node:test';
 
 import { normalizeConfig, platformOrder } from '../src/config.mjs';
-import { parseRemote } from '../src/design.mjs';
+import { parseRemote, requestRebuild } from '../src/design.mjs';
 import { findPlaywrightConfig, init, workflowYaml } from '../src/init.mjs';
 import { readShots } from '../src/lib.mjs';
 import Reporter, { flowOf, slug } from '../reporter/index.mjs';
@@ -108,7 +108,7 @@ test('init: finds the Playwright config and writes the workflow and config once'
 
   assert.match(site, /types: \[journeyboard-data-pushed\]/);
   assert.match(site, /command: build/);
-  assert.match(site, /actions\/deploy-pages@v4/);
+  assert.match(site, /actions\/deploy-pages@v5/);
   assert.equal(readFileSync(path.join(root, 'journeyboard.config.json'), 'utf8'), '{"title":"mine"}');
 });
 
@@ -118,4 +118,17 @@ test('init: a Playwright project in a subfolder runs its commands there', () => 
   assert.match(yml, /run: npm ci\n\s+working-directory: web/);
   assert.match(yml, /npx playwright test --config=playwright\.config\.ts\n\s+working-directory: web/);
   assert.match(yml, /cache-dependency-path: web\/package-lock\.json/);
+});
+
+test('design: asks the data repo to rebuild its site through gh, and shrugs when gh is missing', () => {
+  const calls = [];
+
+  assert.equal(requestRebuild('acme/journeys', (cmd, args) => calls.push([cmd, ...args])), true);
+  assert.deepEqual(calls, [['gh', 'api', '-X', 'POST', 'repos/acme/journeys/dispatches', '-f', 'event_type=journeyboard-data-pushed']]);
+  assert.equal(
+    requestRebuild('acme/journeys', () => {
+      throw new Error('spawn gh ENOENT');
+    }),
+    false
+  );
 });

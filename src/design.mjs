@@ -23,6 +23,20 @@ export function parseRemote(url) {
   throw new Error(`can't read a GitHub repo from the remote "${url}"`);
 }
 
+/**
+ * Asks the data repo to rebuild its board site, the way the GitHub Action does after a push. Uses the GitHub CLI and
+ * its login when there is one; without it the site catches up on its next build. Returns whether the request went out.
+ */
+export function requestRebuild(dataRepo, run = (cmd, args) => execFileSync(cmd, args, { stdio: 'ignore' })) {
+  try {
+    run('gh', ['api', '-X', 'POST', `repos/${dataRepo}/dispatches`, '-f', 'event_type=journeyboard-data-pushed']);
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function design(argv) {
   const args = parseArgs(argv);
 
@@ -49,4 +63,8 @@ export async function design(argv) {
     `Published ${out.result.options} option(s), ${out.result.targets} target(s) for ${repo} ${branch} to ${dataRepo}@${config.dataBranch}` +
       (out.pushed ? ` (${out.commit.slice(0, 7)}).` : ': nothing changed.')
   );
+
+  if (out.pushed && !requestRebuild(dataRepo)) {
+    console.log('The board shows them after its next rebuild (no GitHub CLI login here to ask for one now).');
+  }
 }

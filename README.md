@@ -141,8 +141,29 @@ history keeps every version that reached `main`.
 | `dataRepo` | this repo | Keep the pictures in another repository (see below) |
 | `siteUrl` | the repo's GitHub Pages address | Where the board lives, for links in comments |
 | `owner` | this repo's owner | Used to link pull request numbers on the board |
+| `changes` | `{"threshold": 40, "maxPixels": 0}` | When a screen counts as changed (see below) |
 
 The GitHub Action's inputs override the file. See [`action.yml`](action.yml).
+
+### What counts as a change
+
+Two screenshots of an untouched screen rarely match byte for byte: JPEG encoding and anti-aliasing move faint
+pixels around edges. So journeyboard compares what the pictures show. A screen counts as changed when more than
+`maxPixels` of its pixels differ from the base branch's picture by more than `threshold` (out of 255) in some
+colour channel. A different size always counts as changed, and so does a picture that won't decode.
+
+The defaults are deliberately strict about anything visible and blind to noise. Edge noise stays below 35 out of
+255, even after a second JPEG pass, while a changed glyph moves pixels by 150–255. `maxPixels` stays at 0
+because real changes can be tiny: at 1x, a decimal point that becomes a comma moves five pixels, and a minus sign
+disappearing from an amount moves sixteen. Raise `threshold` if a board still flags untouched screens. Raise
+`maxPixels` only if you accept missing changes of that size. `{"threshold": 0}` restores exact comparison.
+
+```json
+{ "changes": { "threshold": 40, "maxPixels": 0 } }
+```
+
+When a screen reads unchanged, the base branch keeps its existing picture, so noise never piles up in a screen's
+history.
 
 ## The board site
 
@@ -218,7 +239,7 @@ changes and ask a developer to approve them. journeyboard keeps a readable map o
 It names screens by what a user is doing, arranges them as flows, and never blocks a merge. You can use both.
 
 **How big does the data branch get?** A `snap` picture is a JPEG, typically 20–150 KB. The reporter keeps
-Playwright's PNGs, which are larger. A new copy is stored only when a screen actually changes, so a product
+Playwright's PNGs, which are larger. A new copy is stored only when a screen visibly changes, so a product
 with 100 screens that change a few times a week grows by a few megabytes a month. Nobody clones that branch
 unless they ask for it.
 

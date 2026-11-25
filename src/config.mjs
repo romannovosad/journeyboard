@@ -21,6 +21,12 @@ export const DEFAULTS = Object.freeze({
   siteUrl: '',
   /** Platforms in the order the site shows them. `repo` is the code repo that publishes it (for PR links). */
   platforms: [{ id: 'web', label: 'Web' }],
+  /**
+   * When a screen counts as changed: more than `maxPixels` pixels differ from the base branch's picture by more
+   * than `threshold` (0–254, out of 255) in some colour channel. Below that it is JPEG or anti-aliasing noise.
+   * `maxPixels` stays 0 by default: a decimal point turning into a comma moves only about five pixels.
+   */
+  changes: Object.freeze({ threshold: 40, maxPixels: 0 }),
 });
 
 /**
@@ -64,11 +70,35 @@ export function normalizeConfig(raw = {}) {
     }
   }
 
+  config.changes = normalizeChanges(raw.changes);
+
   if (config.dataRepo && !/^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/.test(config.dataRepo)) {
     throw new Error(`${CONFIG_FILE}: "dataRepo" must be owner/repo, got "${config.dataRepo}"`);
   }
 
   return config;
+}
+
+function normalizeChanges(raw = {}) {
+  if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) {
+    throw new Error(`${CONFIG_FILE}: "changes" must be an object like ${JSON.stringify(DEFAULTS.changes)}`);
+  }
+  const unknown = Object.keys(raw).filter((key) => !(key in DEFAULTS.changes));
+
+  if (unknown.length) {
+    throw new Error(`${CONFIG_FILE}: "changes" has unknown ${unknown.map((k) => `"${k}"`).join(', ')}; use threshold and maxPixels`);
+  }
+  const changes = { ...DEFAULTS.changes, ...raw };
+
+  if (!Number.isInteger(changes.threshold) || changes.threshold < 0 || changes.threshold > 254) {
+    throw new Error(`${CONFIG_FILE}: "changes.threshold" must be a whole number from 0 to 254, got ${JSON.stringify(changes.threshold)}`);
+  }
+
+  if (!Number.isInteger(changes.maxPixels) || changes.maxPixels < 0) {
+    throw new Error(`${CONFIG_FILE}: "changes.maxPixels" must be a whole number, 0 or more, got ${JSON.stringify(changes.maxPixels)}`);
+  }
+
+  return changes;
 }
 
 /** Sorts platform ids the way the config lists them; unknown ones go last, alphabetically. */

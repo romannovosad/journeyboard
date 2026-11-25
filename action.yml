@@ -10,49 +10,49 @@ inputs:
     description: "pr (publish a PR's screens and comment), baseline (after a merge), cleanup (a PR closed), or build (the board site, into `out`)"
     required: true
   shots:
-    description: Folder the tests wrote screenshots to (the JOURNEYBOARD_SHOTS they ran with)
+    description: "Folder the tests wrote screenshots to (the JOURNEYBOARD_SHOTS they ran with)"
     default: journeyboard-shots
   platform:
     description: "Which board these screens belong to: web, desktop, ios… (default: the first platform in the config, else web)"
     default: ''
   token:
-    description: Token that can push to the data repo. The default works when the data lives in this repo.
+    description: "Token that can push to the data repo. The default works when the data lives in this repo."
     default: ${{ github.token }}
   github-token:
-    description: Token for this repo's API calls (PR state, the comment). Defaults to the workflow's own.
+    description: "Token for this repo's API calls (PR state, the comment). Defaults to the workflow's own."
     default: ${{ github.token }}
   data-repo:
-    description: owner/repo holding the screenshots (default: config's dataRepo, else this repo)
+    description: "owner/repo holding the screenshots (default: config's dataRepo, else this repo)"
     default: ''
   data-branch:
     description: "Branch holding the screenshots (default: config's dataBranch, else journeyboard-data)"
     default: ''
   repo-name:
-    description: This repo's name as it appears in the data's paths (default its own name). Set when several repos share one data repo under the same name.
+    description: "This repo's name as it appears in the data's paths (default its own name). Set when several repos share one data repo under the same name."
     default: ''
   base-branch:
-    description: Overrides the config's baseBranch (what PR comments compare against)
+    description: "Overrides the config's baseBranch (what PR comments compare against)"
     default: ''
   site-url:
-    description: The board site's address, for links in the PR comment
+    description: "The board site's address, for links in the PR comment"
     default: ''
   config:
-    description: Path to journeyboard.config.json (default at the repo root)
+    description: "Path to journeyboard.config.json (default at the repo root)"
     default: ''
   out:
-    description: For `build`, the folder to write the site to
+    description: "For `build`, the folder to write the site to"
     default: _site
   comment:
-    description: For `pr`, whether to comment on the PR
+    description: "For `pr`, whether to comment on the PR"
     default: 'true'
   dispatch:
-    description: After a push, send a `journeyboard-data-pushed` repository_dispatch to the data repo, so a site workflow there can rebuild
+    description: "After a push, send a `journeyboard-data-pushed` repository_dispatch to the data repo, so a site workflow there can rebuild"
     default: 'true'
   allow-mass-removal:
-    description: For `baseline`, allow dropping more than half the screens at once (a flow was renamed or retired)
+    description: "For `baseline`, allow dropping more than half the screens at once (a flow was renamed or retired)"
     default: 'false'
   prs:
-    description: For `baseline`, the merged PRs to credit, comma separated (default worked out from the commit history)
+    description: "For `baseline`, the merged PRs to credit, comma separated (default worked out from the commit history)"
     default: ''
 
 runs:

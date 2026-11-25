@@ -21,6 +21,6 @@
   "peerDependencies": { "@playwright/test": ">=1.42" },
   "peerDependenciesMeta": { "@playwright/test": { "optional": true } },
   "scripts": {
-    "test": "node --test 'tests/*.test.mjs'"
+    "test": "node --test"
   }
 }

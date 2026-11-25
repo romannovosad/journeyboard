@@ -3,12 +3,12 @@
   "branch": "release/0.1.0",
   "slug": "release~0.1.0",
   "pr": 1,
-  "commit": "6c86629607fa30f8a03ba4a68521e31efb0b1864",
-  "publishedAt": "2026-11-25T10:17:32Z",
+  "commit": "d406d7edfc248b51dac5335960617f52beee296b",
+  "publishedAt": "2026-11-25T10:19:13Z",
   "platforms": {
     "web": {
-      "commit": "6c86629607fa30f8a03ba4a68521e31efb0b1864",
-      "publishedAt": "2026-11-25T10:17:32Z",
+      "commit": "d406d7edfc248b51dac5335960617f52beee296b",
+      "publishedAt": "2026-11-25T10:19:13Z",
       "baselineCommit": null,
       "screens": [
         {

@@ -1,0 +1,5 @@
+{
+  "title": "Ledgerly journeys (journeyboard demo)",
+  "baseBranch": "main",
+  "platforms": [{ "id": "web", "label": "Web" }]
+}

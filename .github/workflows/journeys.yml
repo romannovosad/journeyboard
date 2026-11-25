@@ -1,0 +1,56 @@
+# journeyboard on itself: the demo app's journeys, published with this checkout's action.
+# Every pull request here gets a comment, and the demo board is this repository's GitHub Pages site.
+name: journeys
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+  pages: read
+
+concurrency:
+  group: journeys-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  screens:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: examples/demo/package-lock.json
+      - run: npm ci
+        working-directory: examples/demo
+      - run: npx playwright install --with-deps chromium
+        working-directory: examples/demo
+      - name: Run the demo's journeys, taking screenshots
+        run: npx playwright test
+        working-directory: examples/demo
+        env:
+          JOURNEYBOARD_SHOTS: ${{ runner.temp }}/journeyboard-shots
+      - if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: ./
+        with:
+          command: ${{ github.event_name == 'push' && 'baseline' || 'pr' }}
+          shots: ${{ runner.temp }}/journeyboard-shots
+
+  cleanup:
+    if: github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          command: cleanup

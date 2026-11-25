@@ -108,7 +108,7 @@ test('init: finds the Playwright config and writes the workflow and config once'
 
   assert.match(site, /types: \[journeyboard-data-pushed\]/);
   assert.match(site, /command: build/);
-  assert.match(site, /actions\/deploy-pages@v4/);
+  assert.match(site, /actions\/deploy-pages@v5/);
   assert.equal(readFileSync(path.join(root, 'journeyboard.config.json'), 'utf8'), '{"title":"mine"}');
 });
 

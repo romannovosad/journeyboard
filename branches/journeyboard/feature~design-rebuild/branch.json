@@ -1,0 +1,100 @@
+{
+  "repo": "journeyboard",
+  "branch": "feature/design-rebuild",
+  "slug": "feature~design-rebuild",
+  "pr": 7,
+  "commit": "0ad7e97f1613dfa635ac7bb2f562da19f94ccc6d",
+  "publishedAt": "2026-11-25T10:25:00Z",
+  "platforms": {
+    "web": {
+      "commit": "0ad7e97f1613dfa635ac7bb2f562da19f94ccc6d",
+      "publishedAt": "2026-11-25T10:25:00Z",
+      "baselineCommit": "927af44a18fd8853e28cc8a85dff0055b188d6b9",
+      "screens": [
+        {
+          "flow": "invoicing",
+          "step": "new",
+          "title": "New invoice",
+          "test": "tests/journeys.spec.mjs",
+          "testTitle": "sends the first invoice",
+          "order": 0,
+          "from": "signup/done",
+          "hash": "08a808c7ab1f2a0740119dbecf9e77341807b33bbcb1ae23a1c086135fbd69a6",
+          "status": "unchanged"
+        },
+        {
+          "flow": "invoicing",
+          "step": "sent",
+          "title": "Invoice sent",
+          "test": "tests/journeys.spec.mjs",
+          "testTitle": "sends the first invoice",
+          "order": 1,
+          "hash": "2670f19c653cc93930b9775677120e28d9cdc07723dd183bf77d9a8135fb73b3",
+          "status": "unchanged"
+        },
+        {
+          "flow": "invoicing",
+          "step": "list",
+          "title": "Invoices",
+          "test": "tests/journeys.spec.mjs",
+          "testTitle": "sends the first invoice",
+          "order": 2,
+          "hash": "400393cd494538ca7949f1a2253c36351b858ea676a25aa4babb5b93b8ffd413",
+          "status": "unchanged"
+        },
+        {
+          "flow": "settings",
+          "step": "account",
+          "title": "Settings",
+          "test": "tests/journeys.spec.mjs",
+          "testTitle": "checks settings",
+          "order": 0,
+          "from": "invoicing/list",
+          "hash": "f5e905da6ebc9b1dad7a6a886ddd24825af1b9a5ff6f5b2274bb3dce68c1bc5c",
+          "status": "unchanged"
+        },
+        {
+          "flow": "signup",
+          "step": "landing",
+          "title": "Landing",
+          "test": "tests/journeys.spec.mjs",
+          "testTitle": "a new customer signs up",
+          "order": 0,
+          "hash": "a2e989d261b0b8fec048b85c78886d61ac96bde8f3bc56f9f29229ef4742f944",
+          "status": "unchanged"
+        },
+        {
+          "flow": "signup",
+          "step": "account",
+          "title": "Create your account",
+          "test": "tests/journeys.spec.mjs",
+          "testTitle": "a new customer signs up",
+          "order": 1,
+          "hash": "0df32b3bcd8822fad330667d0512c8aa319df3d0e426ff5887ead52eba6cda15",
+          "status": "unchanged"
+        },
+        {
+          "flow": "signup",
+          "step": "workspace",
+          "title": "Name your workspace",
+          "test": "tests/journeys.spec.mjs",
+          "testTitle": "a new customer signs up",
+          "order": 2,
+          "hash": "db590c2b0929d036d98687256305f31a56ad5d0aa5e9d0b0ac9cd790fd67eea0",
+          "status": "unchanged"
+        },
+        {
+          "flow": "signup",
+          "step": "done",
+          "title": "You're all set",
+          "test": "tests/journeys.spec.mjs",
+          "testTitle": "a new customer signs up",
+          "order": 3,
+          "hash": "69344747456480dc62336fc4b711cf7d5f07283547fcaa9e2b862cdfda386c66",
+          "status": "unchanged"
+        }
+      ],
+      "removed": []
+    }
+  }
+}
